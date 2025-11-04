@@ -1,6 +1,7 @@
 package com.reliaquest.api.request;
 
-import com.reliaquest.api.model.Employee;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
@@ -8,13 +9,19 @@ import lombok.Data;
 @AllArgsConstructor
 public class CreateEmployeeRequest {
 
+    @NotBlank(message = "Name cannot be blank")
+    @JsonProperty("employee_name")
     private String name;
-    private Integer salary;
-    private Integer age;
-    private String title;
-    private String email;
 
-    public Employee toEmployee() {
-        return new Employee(null, name, salary, age, title, email);
-    }
+    @JsonProperty("employee_salary")
+    private Integer salary;
+
+    @JsonProperty("employee_age")
+    private Integer age;
+
+    @JsonProperty("employee_title")
+    private String title;
+
+    @JsonProperty("employee_email")
+    private String email;
 }

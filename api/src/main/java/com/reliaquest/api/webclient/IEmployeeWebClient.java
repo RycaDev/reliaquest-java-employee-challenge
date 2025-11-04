@@ -1,10 +1,10 @@
 package com.reliaquest.api.webclient;
 
-import com.reliaquest.api.model.Employee;
+import com.reliaquest.api.request.CreateEmployeeRequest;
+import com.reliaquest.api.response.CreateEmployeeResponse;
 import com.reliaquest.api.response.DeleteEmployeeResponse;
 import com.reliaquest.api.response.GetAllEmployeesResponse;
 import com.reliaquest.api.response.GetEmployeeResponse;
-import com.reliaquest.api.response.CreateEmployeeResponse;
 
 public interface IEmployeeWebClient {
 
@@ -12,7 +12,7 @@ public interface IEmployeeWebClient {
 
     GetEmployeeResponse getEmployeeById(String id);
 
-    CreateEmployeeResponse createEmployee(Employee employee);
+    CreateEmployeeResponse createEmployee(CreateEmployeeRequest createEmployeeRequest);
 
     DeleteEmployeeResponse deleteEmployee(String id);
 }

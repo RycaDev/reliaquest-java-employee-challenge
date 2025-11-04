@@ -39,12 +39,12 @@ public class EmployeeService implements IEmployeeService<Employee, CreateEmploye
     }
 
     @Override
-    public ResponseEntity<List<Employee>> getEmployeesByNameSearch(String name) {
+    public ResponseEntity<List<Employee>> getEmployeesByNameSearch(String searchString) {
 
         try {
             List<Employee> employees = employeeWebClient.getAllEmployees().getData();
             List<Employee> employeeByName = employees.stream()
-                    .filter(employee -> employee.getName().toLowerCase().contains(name.toLowerCase()))
+                    .filter(employee -> employee.getName().toLowerCase().contains(searchString.toLowerCase()))
                     .toList();
 
             return ResponseEntity.ok(employeeByName);
@@ -108,7 +108,7 @@ public class EmployeeService implements IEmployeeService<Employee, CreateEmploye
     public ResponseEntity<Employee> createEmployee(CreateEmployeeRequest employeeInput) {
 
         try {
-            CreateEmployeeResponse createEmployeesResponse = employeeWebClient.createEmployee(employeeInput.toEmployee());
+            CreateEmployeeResponse createEmployeesResponse = employeeWebClient.createEmployee(employeeInput);
             return ResponseEntity.ok(createEmployeesResponse.getData());
         } catch (Exception e) {
             log.error(e.getMessage());
