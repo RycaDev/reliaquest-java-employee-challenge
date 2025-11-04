@@ -1,4 +1,4 @@
-package com.reliaquest.api.requests;
+package com.reliaquest.api.request;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

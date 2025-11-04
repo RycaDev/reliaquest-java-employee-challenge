@@ -1,7 +1,8 @@
 package com.reliaquest.api.controller;
 
 import com.reliaquest.api.model.Employee;
-import com.reliaquest.api.requests.CreateEmployeeRequest;
+import com.reliaquest.api.request.CreateEmployeeRequest;
+import com.reliaquest.api.service.IEmployeeService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 
@@ -10,11 +11,15 @@ import java.util.List;
 @Controller
 public class EmployeeController implements IEmployeeController<Employee, CreateEmployeeRequest> {
 
+    private final IEmployeeService<Employee> employeeService;
 
+    public EmployeeController(IEmployeeService<Employee> employeeService) {
+        this.employeeService = employeeService;
+    }
 
     @Override
     public ResponseEntity<List<Employee>> getAllEmployees() {
-        return null;
+        return employeeService.getAllEmployees();
     }
 
     @Override

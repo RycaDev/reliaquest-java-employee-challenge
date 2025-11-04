@@ -5,6 +5,6 @@ mock:
   server:
     host: localhost
     port: 8112
-    url: http://${mock.server.host}:${mock.server.port}/api/v1/employee
+    url: http://${mock.server.host}:${mock.server.port}
 
 
