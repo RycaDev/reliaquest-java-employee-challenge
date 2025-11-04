@@ -8,6 +8,6 @@ import java.util.List;
 
 @Data
 @AllArgsConstructor
-public class EmployeeResponse {
-    List<Employee> data;
+public class GetEmployeeResponse {
+    Employee data;
 }

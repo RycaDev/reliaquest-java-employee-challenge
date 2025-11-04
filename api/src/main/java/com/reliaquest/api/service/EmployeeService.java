@@ -1,7 +1,7 @@
 package com.reliaquest.api.service;
 
 import com.reliaquest.api.model.Employee;
-import com.reliaquest.api.response.EmployeeResponse;
+import com.reliaquest.api.response.GetAllEmployeesResponse;
 import com.reliaquest.api.webclient.EmployeeWebClient;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,8 +25,8 @@ public class EmployeeService implements IEmployeeService<Employee> {
     public ResponseEntity<List<Employee>> getAllEmployees() {
 
         try {
-            EmployeeResponse employeeResponse = employeeWebClient.getAllEmployees();
-            return ResponseEntity.ok(employeeResponse.getData());
+            GetAllEmployeesResponse getAllEmployeesResponse = employeeWebClient.getAllEmployees();
+            return ResponseEntity.ok(getAllEmployeesResponse.getData());
         } catch (Exception e) {
            log.error(e.getMessage());
            return ResponseEntity.notFound().build();
