@@ -10,4 +10,5 @@ import java.util.List;
 @AllArgsConstructor
 public class GetAllEmployeesResponse {
     List<Employee> data;
+    String status;
 }

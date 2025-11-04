@@ -7,5 +7,6 @@ import lombok.Data;
 @Data
 @AllArgsConstructor
 public class DeleteEmployeeResponse {
-    Employee data;
+    Boolean data;
+    String status;
 }

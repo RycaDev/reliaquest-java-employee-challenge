@@ -6,6 +6,7 @@ import lombok.Data;
 
 @Data
 @AllArgsConstructor
-public class UpdateEmployeeResponse {
+public class CreateEmployeeResponse {
     Employee data;
+    String status;
 }
