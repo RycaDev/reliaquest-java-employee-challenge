@@ -34,7 +34,7 @@ public class EmployeeService implements IEmployeeService<Employee, CreateEmploye
             return ResponseEntity.ok(allEmployeesResponse.getData());
         } catch (Exception e) {
            log.error(e.getMessage());
-           return ResponseEntity.notFound().build();
+           return ResponseEntity.internalServerError().build();
         }
     }
 
@@ -51,7 +51,7 @@ public class EmployeeService implements IEmployeeService<Employee, CreateEmploye
 
         } catch (Exception e) {
             log.error(e.getMessage());
-            return ResponseEntity.notFound().build();
+            return ResponseEntity.internalServerError().build();
         }
     }
 
@@ -63,7 +63,7 @@ public class EmployeeService implements IEmployeeService<Employee, CreateEmploye
             return ResponseEntity.ok(employeeResponse.getData());
         } catch (Exception e) {
             log.error(e.getMessage());
-            return ResponseEntity.notFound().build();
+            return ResponseEntity.internalServerError().build();
         }
     }
 
@@ -81,7 +81,7 @@ public class EmployeeService implements IEmployeeService<Employee, CreateEmploye
 
         } catch (Exception e) {
             log.error(e.getMessage());
-            return ResponseEntity.notFound().build();
+            return ResponseEntity.internalServerError().build();
         }
     }
 
@@ -100,7 +100,7 @@ public class EmployeeService implements IEmployeeService<Employee, CreateEmploye
 
         } catch (Exception e) {
             log.error(e.getMessage());
-            return ResponseEntity.notFound().build();
+            return ResponseEntity.internalServerError().build();
         }
     }
 
@@ -112,7 +112,7 @@ public class EmployeeService implements IEmployeeService<Employee, CreateEmploye
             return ResponseEntity.ok(createEmployeesResponse.getData());
         } catch (Exception e) {
             log.error(e.getMessage());
-            return ResponseEntity.notFound().build();
+            return ResponseEntity.internalServerError().build();
         }
     }
 
@@ -121,10 +121,16 @@ public class EmployeeService implements IEmployeeService<Employee, CreateEmploye
 
         try {
             DeleteEmployeeResponse allEmployeesResponse = employeeWebClient.deleteEmployee(id);
+
+            if (allEmployeesResponse.getData() == null || !allEmployeesResponse.getData()) {
+                log.error("Delete employee failed");
+                throw new RuntimeException("Delete employee failed");
+            }
+
             return ResponseEntity.ok(allEmployeesResponse.getStatus());
         } catch (Exception e) {
             log.error(e.getMessage());
-            return ResponseEntity.notFound().build();
+            return ResponseEntity.internalServerError().build();
         }
     }
 }

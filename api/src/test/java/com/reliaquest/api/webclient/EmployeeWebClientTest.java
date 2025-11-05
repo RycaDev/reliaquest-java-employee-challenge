@@ -73,7 +73,7 @@ class EmployeeWebClientTest {
                 new Employee(uuid2, "Marcellus Witting", 44444, 44, "title", "email")
         );
 
-        GetAllEmployeesResponse expectedResponse = new GetAllEmployeesResponse(employees);
+        GetAllEmployeesResponse expectedResponse = new GetAllEmployeesResponse(employees, "status");
 
         mockWebClientChain(expectedResponse);
 
@@ -88,7 +88,7 @@ class EmployeeWebClientTest {
     @Test
     void getAllEmployees_ShouldReturnEmptyList_WhenNoEmployeesFound() {
 
-        GetAllEmployeesResponse expectedResponse = new GetAllEmployeesResponse(Collections.emptyList());
+        GetAllEmployeesResponse expectedResponse = new GetAllEmployeesResponse(Collections.emptyList(), "status");
         mockWebClientChain(expectedResponse);
 
         GetAllEmployeesResponse actualResponse = employeeWebClient.getAllEmployees();
