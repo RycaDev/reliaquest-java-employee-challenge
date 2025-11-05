@@ -107,6 +107,10 @@ public class EmployeeService implements IEmployeeService<Employee, CreateEmploye
     @Override
     public ResponseEntity<Employee> createEmployee(CreateEmployeeRequest employeeInput) {
 
+        if (!validateInput(employeeInput)) {
+            return ResponseEntity.badRequest().build();
+        }
+
         try {
             CreateEmployeeResponse createEmployeesResponse = employeeWebClient.createEmployee(employeeInput);
             return ResponseEntity.ok(createEmployeesResponse.getData());
@@ -120,7 +124,8 @@ public class EmployeeService implements IEmployeeService<Employee, CreateEmploye
     public ResponseEntity<String> deleteEmployeeById(String id) {
 
         try {
-            DeleteEmployeeResponse allEmployeesResponse = employeeWebClient.deleteEmployee(id);
+            GetEmployeeResponse employeeResponse = employeeWebClient.getEmployeeById(id);
+            DeleteEmployeeResponse allEmployeesResponse = employeeWebClient.deleteEmployee(employeeResponse.getData().getName());
 
             if (allEmployeesResponse.getData() == null || !allEmployeesResponse.getData()) {
                 log.error("Delete employee failed");
@@ -131,6 +136,19 @@ public class EmployeeService implements IEmployeeService<Employee, CreateEmploye
         } catch (Exception e) {
             log.error(e.getMessage());
             return ResponseEntity.internalServerError().build();
+        }
+    }
+
+    private boolean validateInput(CreateEmployeeRequest employeeInput) {
+
+        if ((employeeInput.getName() == null || employeeInput.getName().isEmpty()) ||
+                (employeeInput.getSalary() < 0) ||
+                (employeeInput.getAge() < 16 || employeeInput.getAge() > 75) ||
+                (employeeInput.getTitle() == null || employeeInput.getTitle().isEmpty())
+        ) {
+            return false;
+        } else {
+            return true;
         }
     }
 }

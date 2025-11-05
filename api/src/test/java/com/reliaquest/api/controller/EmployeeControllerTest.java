@@ -140,5 +140,4 @@ class EmployeeControllerTest {
         assertEquals(HttpStatus.OK, response.getStatusCode());
         assertEquals(522, response.getBody().getSalary());
     }
-
 }

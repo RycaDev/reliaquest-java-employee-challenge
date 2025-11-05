@@ -1,13 +1,16 @@
 package com.reliaquest.api.webclient;
 
 import com.reliaquest.api.request.CreateEmployeeRequest;
+import com.reliaquest.api.request.DeleteEmployeeRequest;
 import com.reliaquest.api.response.CreateEmployeeResponse;
 import com.reliaquest.api.response.DeleteEmployeeResponse;
 import com.reliaquest.api.response.GetAllEmployeesResponse;
 import com.reliaquest.api.response.GetEmployeeResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatusCode;
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
@@ -84,10 +87,14 @@ public class EmployeeWebClient implements IEmployeeWebClient {
     }
 
     @Override
-    public DeleteEmployeeResponse deleteEmployee(String id) {
+    public DeleteEmployeeResponse deleteEmployee(String name) {
 
-        return webClient.delete()
-                .uri(EMPLOYEE_PATH + SLASH + id)
+        DeleteEmployeeRequest deleteEmployeeRequest = new DeleteEmployeeRequest(name);
+
+        return webClient.method(HttpMethod.DELETE)
+                .uri(EMPLOYEE_PATH)
+                .contentType(MediaType.APPLICATION_JSON)
+                .bodyValue(deleteEmployeeRequest)
                 .retrieve()
                 .onStatus(HttpStatusCode::is4xxClientError, response -> {
                     log.error(response.toString());

@@ -224,6 +224,61 @@ class EmployeeServiceTest {
     }
 
     @Test
+    void createEmployee_ShouldCreateNewEmployee_BadRequestEmptyName() {
+
+        Employee newEmployee = new Employee(null, "", 555, 55, "title55", "email55");
+        CreateEmployeeRequest request = new CreateEmployeeRequest(newEmployee.getName(), newEmployee.getSalary(), newEmployee.getAge(), newEmployee.getTitle(), newEmployee.getEmail());
+
+        ResponseEntity<Employee> employeesResponse = employeeService.createEmployee(request);
+
+        assertEquals(HttpStatus.BAD_REQUEST, employeesResponse.getStatusCode());
+    }
+
+    @Test
+    void createEmployee_ShouldCreateNewEmployee_BadRequestNegativeSalary() {
+
+        Employee newEmployee = new Employee(null, "Name", -1, 55, "title55", "email55");
+        CreateEmployeeRequest request = new CreateEmployeeRequest(newEmployee.getName(), newEmployee.getSalary(), newEmployee.getAge(), newEmployee.getTitle(), newEmployee.getEmail());
+
+        ResponseEntity<Employee> employeesResponse = employeeService.createEmployee(request);
+
+        assertEquals(HttpStatus.BAD_REQUEST, employeesResponse.getStatusCode());
+    }
+
+    @Test
+    void createEmployee_ShouldCreateNewEmployee_BadRequestAgeTooLow() {
+
+        Employee newEmployee = new Employee(null, "Name", 100000, 12, "title55", "email55");
+        CreateEmployeeRequest request = new CreateEmployeeRequest(newEmployee.getName(), newEmployee.getSalary(), newEmployee.getAge(), newEmployee.getTitle(), newEmployee.getEmail());
+
+        ResponseEntity<Employee> employeesResponse = employeeService.createEmployee(request);
+
+        assertEquals(HttpStatus.BAD_REQUEST, employeesResponse.getStatusCode());
+    }
+
+    @Test
+    void createEmployee_ShouldCreateNewEmployee_BadRequestAgeTooHigh() {
+
+        Employee newEmployee = new Employee(null, "Name", 100000, 80, "title55", "email55");
+        CreateEmployeeRequest request = new CreateEmployeeRequest(newEmployee.getName(), newEmployee.getSalary(), newEmployee.getAge(), newEmployee.getTitle(), newEmployee.getEmail());
+
+        ResponseEntity<Employee> employeesResponse = employeeService.createEmployee(request);
+
+        assertEquals(HttpStatus.BAD_REQUEST, employeesResponse.getStatusCode());
+    }
+
+    @Test
+    void createEmployee_ShouldCreateNewEmployee_BadRequestTitleEmpty() {
+
+        Employee newEmployee = new Employee(null, "Name", 100000, 40, "", "email55");
+        CreateEmployeeRequest request = new CreateEmployeeRequest(newEmployee.getName(), newEmployee.getSalary(), newEmployee.getAge(), newEmployee.getTitle(), newEmployee.getEmail());
+
+        ResponseEntity<Employee> employeesResponse = employeeService.createEmployee(request);
+
+        assertEquals(HttpStatus.BAD_REQUEST, employeesResponse.getStatusCode());
+    }
+
+    @Test
     void createEmployee_ShouldCreateNewEmployee_InternalServerError() {
 
         Employee newEmployee = new Employee(null, "name21", 555, 55, "title55", "email55");
