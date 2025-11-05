@@ -1,12 +1,18 @@
 package com.reliaquest.api.webclient;
 
-import com.reliaquest.api.model.Employee;
-import com.reliaquest.api.response.GetAllEmployeesResponse;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.when;
 
+import com.reliaquest.api.model.Employee;
+import com.reliaquest.api.response.GetAllEmployeesResponse;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+import java.util.UUID;
+import java.util.function.Predicate;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -16,14 +22,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.reactive.function.client.WebClient;
 import org.springframework.web.reactive.function.client.WebClientResponseException;
 import reactor.core.publisher.Mono;
-
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
-import java.util.UUID;
-import java.util.function.Predicate;
-
-import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 class EmployeeWebClientTest {
@@ -70,8 +68,7 @@ class EmployeeWebClientTest {
 
         List<Employee> employees = Arrays.asList(
                 new Employee(uuid1, "Lakenya Walter", 44444, 44, "title", "email"),
-                new Employee(uuid2, "Marcellus Witting", 44444, 44, "title", "email")
-        );
+                new Employee(uuid2, "Marcellus Witting", 44444, 44, "title", "email"));
 
         GetAllEmployeesResponse expectedResponse = new GetAllEmployeesResponse(employees, "status");
 
@@ -101,20 +98,14 @@ class EmployeeWebClientTest {
     @Test
     void getAllEmployees_4xxClientError_ShouldThrowRuntimeException() {
 
-        WebClientResponseException clientException = WebClientResponseException.create(
-                HttpStatus.NOT_FOUND.value(),
-                "Not Found",
-                null,
-                null,
-                null
-        );
+        WebClientResponseException clientException =
+                WebClientResponseException.create(HttpStatus.NOT_FOUND.value(), "Not Found", null, null, null);
 
         when(webClient.get()).thenReturn(requestHeadersUriSpec);
         when(requestHeadersUriSpec.uri(EMPLOYEE_PATH)).thenReturn(requestHeadersSpec);
         when(requestHeadersSpec.retrieve()).thenReturn(responseSpec);
         when(responseSpec.onStatus(any(Predicate.class), any())).thenReturn(responseSpec);
-        when(responseSpec.bodyToMono(GetAllEmployeesResponse.class))
-                .thenReturn(Mono.error(clientException));
+        when(responseSpec.bodyToMono(GetAllEmployeesResponse.class)).thenReturn(Mono.error(clientException));
 
         assertThrows(WebClientResponseException.class, () -> {
             employeeWebClient.getAllEmployees();
@@ -125,19 +116,13 @@ class EmployeeWebClientTest {
     void getAllEmployees_5xxServerError_ShouldThrowRuntimeException() {
 
         WebClientResponseException serverException = WebClientResponseException.create(
-                HttpStatus.INTERNAL_SERVER_ERROR.value(),
-                "Internal Server Error",
-                null,
-                null,
-                null
-        );
+                HttpStatus.INTERNAL_SERVER_ERROR.value(), "Internal Server Error", null, null, null);
 
         when(webClient.get()).thenReturn(requestHeadersUriSpec);
         when(requestHeadersUriSpec.uri(EMPLOYEE_PATH)).thenReturn(requestHeadersSpec);
         when(requestHeadersSpec.retrieve()).thenReturn(responseSpec);
         when(responseSpec.onStatus(any(Predicate.class), any())).thenReturn(responseSpec);
-        when(responseSpec.bodyToMono(GetAllEmployeesResponse.class))
-                .thenReturn(Mono.error(serverException));
+        when(responseSpec.bodyToMono(GetAllEmployeesResponse.class)).thenReturn(Mono.error(serverException));
 
         assertThrows(WebClientResponseException.class, () -> {
             employeeWebClient.getAllEmployees();
@@ -149,8 +134,6 @@ class EmployeeWebClientTest {
         when(requestHeadersUriSpec.uri(EMPLOYEE_PATH)).thenReturn(requestHeadersSpec);
         when(requestHeadersSpec.retrieve()).thenReturn(responseSpec);
         when(responseSpec.onStatus(any(Predicate.class), any())).thenReturn(responseSpec);
-        when(responseSpec.bodyToMono(GetAllEmployeesResponse.class))
-                .thenReturn(Mono.just(response));
+        when(responseSpec.bodyToMono(GetAllEmployeesResponse.class)).thenReturn(Mono.just(response));
     }
-
 }

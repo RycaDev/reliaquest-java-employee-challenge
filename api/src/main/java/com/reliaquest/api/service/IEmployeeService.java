@@ -1,9 +1,8 @@
 package com.reliaquest.api.service;
 
+import java.util.List;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 public interface IEmployeeService<Entity, Input> {
 

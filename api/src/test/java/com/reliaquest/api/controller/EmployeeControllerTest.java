@@ -1,8 +1,12 @@
 package com.reliaquest.api.controller;
 
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.when;
+
 import com.reliaquest.api.model.Employee;
 import com.reliaquest.api.request.CreateEmployeeRequest;
 import com.reliaquest.api.service.EmployeeService;
+import java.util.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -10,11 +14,6 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-
-import java.util.*;
-
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 class EmployeeControllerTest {
@@ -44,8 +43,7 @@ class EmployeeControllerTest {
             new Employee(UUID.randomUUID(), "name15", 514, 35, "title15", "email15"),
             new Employee(UUID.randomUUID(), "name1", 500, 20, "title1", "email1"),
             new Employee(UUID.randomUUID(), "name16", 515, 36, "title16", "email16"),
-            new Employee(UUID.randomUUID(), "name18", 517, 38, "title18", "email18")
-    ));
+            new Employee(UUID.randomUUID(), "name18", 517, 38, "title18", "email18")));
 
     @BeforeEach
     void setUp() {
@@ -65,7 +63,8 @@ class EmployeeControllerTest {
     @Test
     void getEmployeesByNameSearch_ShouldReturnEmployeesByName_Success() {
 
-        when(employeeService.getEmployeesByNameSearch("name7")).thenReturn(ResponseEntity.ok(List.of(employees.get(6))));
+        when(employeeService.getEmployeesByNameSearch("name7"))
+                .thenReturn(ResponseEntity.ok(List.of(employees.get(6))));
 
         ResponseEntity<List<Employee>> response = employeeController.getEmployeesByNameSearch("name7");
         assertEquals(HttpStatus.OK, response.getStatusCode());
@@ -75,9 +74,11 @@ class EmployeeControllerTest {
     @Test
     void getEmployeeById_ShouldReturnEmployeeById_Success() {
 
-        when(employeeService.getEmployeeById(employees.get(0).getId().toString())).thenReturn(ResponseEntity.ok(employees.get(0)));
+        when(employeeService.getEmployeeById(employees.get(0).getId().toString()))
+                .thenReturn(ResponseEntity.ok(employees.get(0)));
 
-        ResponseEntity<Employee> response = employeeController.getEmployeeById(employees.get(0).getId().toString());
+        ResponseEntity<Employee> response =
+                employeeController.getEmployeeById(employees.get(0).getId().toString());
         assertEquals(HttpStatus.OK, response.getStatusCode());
         assertEquals(employees.get(0), response.getBody());
     }
@@ -95,8 +96,8 @@ class EmployeeControllerTest {
     @Test
     void getTopTenHighestEarningEmployeeNames_ShouldReturnTopTenHighestEarningEmployeeNames_Success() {
 
-        when(employeeService.getTopTenHighestEarningEmployeeNames()).thenReturn(
-                ResponseEntity.ok(employees.stream()
+        when(employeeService.getTopTenHighestEarningEmployeeNames())
+                .thenReturn(ResponseEntity.ok(employees.stream()
                         .sorted(Comparator.comparing(Employee::getSalary).reversed())
                         .limit(10)
                         .map(Employee::getName)
@@ -133,8 +134,11 @@ class EmployeeControllerTest {
     @Test
     void createEmployee_ShouldCreateEmployee_Success() {
 
-        CreateEmployeeRequest createEmployeeRequest = new CreateEmployeeRequest("name22", 522, 43, "title22", "email22");
-        when(employeeService.createEmployee(createEmployeeRequest)).thenReturn(ResponseEntity.ok(new Employee(UUID.randomUUID(), "name22", 522, 43, "title22", "email22")));
+        CreateEmployeeRequest createEmployeeRequest =
+                new CreateEmployeeRequest("name22", 522, 43, "title22", "email22");
+        when(employeeService.createEmployee(createEmployeeRequest))
+                .thenReturn(
+                        ResponseEntity.ok(new Employee(UUID.randomUUID(), "name22", 522, 43, "title22", "email22")));
 
         ResponseEntity<Employee> response = employeeController.createEmployee(createEmployeeRequest);
         assertEquals(HttpStatus.OK, response.getStatusCode());

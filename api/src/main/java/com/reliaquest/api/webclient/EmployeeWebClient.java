@@ -7,18 +7,16 @@ import com.reliaquest.api.response.CreateEmployeeResponse;
 import com.reliaquest.api.response.DeleteEmployeeResponse;
 import com.reliaquest.api.response.GetAllEmployeesResponse;
 import com.reliaquest.api.response.GetEmployeeResponse;
+import java.time.Duration;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpMethod;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
 import reactor.util.retry.Retry;
-
-import java.time.Duration;
 
 @Slf4j
 @Service
@@ -31,20 +29,17 @@ public class EmployeeWebClient implements IEmployeeWebClient {
     private static final int MAX_DURATION = 10;
     private static final int DURATION = 1;
 
-    public EmployeeWebClient(WebClient.Builder webClientBuilder,
-                             @Value("${mock.server.url}")  String mockServerUrl) {
-        this.webClient = webClientBuilder
-                .baseUrl(mockServerUrl)
-                .build();
+    public EmployeeWebClient(WebClient.Builder webClientBuilder, @Value("${mock.server.url}") String mockServerUrl) {
+        this.webClient = webClientBuilder.baseUrl(mockServerUrl).build();
     }
 
     @Override
     public GetAllEmployeesResponse getAllEmployees() {
-        return webClient.get()
+        return webClient
+                .get()
                 .uri(EMPLOYEE_PATH)
                 .retrieve()
                 .onStatus(HttpStatusCode::is4xxClientError, response -> {
-
                     if (response.statusCode().value() == 429) {
                         return Mono.error(new RetryableException("Hit Rate Limiter"));
                     }
@@ -60,18 +55,19 @@ public class EmployeeWebClient implements IEmployeeWebClient {
                 .retryWhen(Retry.backoff(MAX_RETRIES, Duration.ofSeconds(DURATION))
                         .maxBackoff(Duration.ofSeconds(MAX_DURATION))
                         .filter(throwable -> throwable instanceof RetryableException)
-                        .doBeforeRetry( retry -> log.warn("Retrying getAllEmployees due to rate limiter, attempt #{}", retry.totalRetries() + 1)))
+                        .doBeforeRetry(retry -> log.warn(
+                                "Retrying getAllEmployees due to rate limiter, attempt #{}", retry.totalRetries() + 1)))
                 .block();
     }
 
     @Override
     public GetEmployeeResponse getEmployeeById(String id) {
 
-        return webClient.get()
+        return webClient
+                .get()
                 .uri(EMPLOYEE_PATH + SLASH + id)
                 .retrieve()
                 .onStatus(HttpStatusCode::is4xxClientError, response -> {
-
                     if (response.statusCode().value() == 429) {
                         return Mono.error(new RetryableException("Hit Rate Limiter"));
                     }
@@ -87,19 +83,20 @@ public class EmployeeWebClient implements IEmployeeWebClient {
                 .retryWhen(Retry.backoff(MAX_RETRIES, Duration.ofSeconds(DURATION))
                         .maxBackoff(Duration.ofSeconds(MAX_DURATION))
                         .filter(throwable -> throwable instanceof RetryableException)
-                        .doBeforeRetry( retry -> log.warn("Retrying getEmployeeById due to rate limiter, attempt #{}", retry.totalRetries() + 1)))
+                        .doBeforeRetry(retry -> log.warn(
+                                "Retrying getEmployeeById due to rate limiter, attempt #{}", retry.totalRetries() + 1)))
                 .block();
     }
 
     @Override
     public CreateEmployeeResponse createEmployee(CreateEmployeeRequest createEmployeeRequest) {
 
-        return webClient.post()
+        return webClient
+                .post()
                 .uri(EMPLOYEE_PATH)
                 .bodyValue(createEmployeeRequest)
                 .retrieve()
                 .onStatus(HttpStatusCode::is4xxClientError, response -> {
-
                     if (response.statusCode().value() == 429) {
                         return Mono.error(new RetryableException("Hit Rate Limiter"));
                     }
@@ -112,12 +109,16 @@ public class EmployeeWebClient implements IEmployeeWebClient {
                     return Mono.error(new RuntimeException("Server error: " + response.statusCode()));
                 })
                 .bodyToMono(CreateEmployeeResponse.class)
-                .doOnSuccess(response -> log.info("Successfully created employee with ID: {}",
-                        response != null && response.getData() != null ? response.getData().getId() : "unknown"))
+                .doOnSuccess(response -> log.info(
+                        "Successfully created employee with ID: {}",
+                        response != null && response.getData() != null
+                                ? response.getData().getId()
+                                : "unknown"))
                 .retryWhen(Retry.backoff(MAX_RETRIES, Duration.ofSeconds(DURATION))
                         .maxBackoff(Duration.ofSeconds(MAX_DURATION))
                         .filter(throwable -> throwable instanceof RetryableException)
-                        .doBeforeRetry( retry -> log.warn("Retrying createEmployee due to rate limiter, attempt #{}", retry.totalRetries() + 1)))
+                        .doBeforeRetry(retry -> log.warn(
+                                "Retrying createEmployee due to rate limiter, attempt #{}", retry.totalRetries() + 1)))
                 .block();
     }
 
@@ -126,13 +127,13 @@ public class EmployeeWebClient implements IEmployeeWebClient {
 
         DeleteEmployeeRequest deleteEmployeeRequest = new DeleteEmployeeRequest(name);
 
-        return webClient.method(HttpMethod.DELETE)
+        return webClient
+                .method(HttpMethod.DELETE)
                 .uri(EMPLOYEE_PATH)
                 .contentType(MediaType.APPLICATION_JSON)
                 .bodyValue(deleteEmployeeRequest)
                 .retrieve()
                 .onStatus(HttpStatusCode::is4xxClientError, response -> {
-
                     if (response.statusCode().value() == 429) {
                         return Mono.error(new RetryableException("Hit Rate Limiter"));
                     }
@@ -148,7 +149,8 @@ public class EmployeeWebClient implements IEmployeeWebClient {
                 .retryWhen(Retry.backoff(MAX_RETRIES, Duration.ofSeconds(DURATION))
                         .maxBackoff(Duration.ofSeconds(MAX_DURATION))
                         .filter(throwable -> throwable instanceof RetryableException)
-                        .doBeforeRetry( retry -> log.warn("Retrying deleteEmployee due to rate limiter, attempt #{}", retry.totalRetries() + 1)))
+                        .doBeforeRetry(retry -> log.warn(
+                                "Retrying deleteEmployee due to rate limiter, attempt #{}", retry.totalRetries() + 1)))
                 .block();
     }
 }

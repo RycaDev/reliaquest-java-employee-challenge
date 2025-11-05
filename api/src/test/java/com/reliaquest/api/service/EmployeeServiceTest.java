@@ -1,5 +1,8 @@
 package com.reliaquest.api.service;
 
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.when;
+
 import com.reliaquest.api.model.Employee;
 import com.reliaquest.api.request.CreateEmployeeRequest;
 import com.reliaquest.api.response.CreateEmployeeResponse;
@@ -7,6 +10,10 @@ import com.reliaquest.api.response.DeleteEmployeeResponse;
 import com.reliaquest.api.response.GetAllEmployeesResponse;
 import com.reliaquest.api.response.GetEmployeeResponse;
 import com.reliaquest.api.webclient.EmployeeWebClient;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.UUID;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -14,14 +21,6 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.UUID;
-
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 class EmployeeServiceTest {
@@ -51,8 +50,7 @@ class EmployeeServiceTest {
             new Employee(UUID.randomUUID(), "name15", 514, 35, "title15", "email15"),
             new Employee(UUID.randomUUID(), "name1", 500, 20, "title1", "email1"),
             new Employee(UUID.randomUUID(), "name16", 515, 36, "title16", "email16"),
-            new Employee(UUID.randomUUID(), "name18", 517, 38, "title18", "email18")
-    ));
+            new Employee(UUID.randomUUID(), "name18", 517, 38, "title18", "email18")));
 
     @BeforeEach
     void setUp() {
@@ -168,7 +166,6 @@ class EmployeeServiceTest {
         assertNull(employeesResponse.getBody());
     }
 
-
     @Test
     void getTopTenHighestEarningEmployeeNames_ShouldReturnTopTenHighestEarningEmployeeNames_Success() {
 
@@ -208,10 +205,14 @@ class EmployeeServiceTest {
     void createEmployee_ShouldCreateNewEmployee_Success() {
 
         Employee newEmployee = new Employee(null, "name21", 555, 55, "title55", "email55");
-        CreateEmployeeRequest request = new CreateEmployeeRequest(newEmployee.getName(), newEmployee.getSalary(), newEmployee.getAge(), newEmployee.getTitle(), newEmployee.getEmail());
+        CreateEmployeeRequest request = new CreateEmployeeRequest(
+                newEmployee.getName(),
+                newEmployee.getSalary(),
+                newEmployee.getAge(),
+                newEmployee.getTitle(),
+                newEmployee.getEmail());
 
-        when(employeeWebClient.createEmployee(request))
-                .thenReturn(new CreateEmployeeResponse(newEmployee, "success"));
+        when(employeeWebClient.createEmployee(request)).thenReturn(new CreateEmployeeResponse(newEmployee, "success"));
 
         ResponseEntity<Employee> employeesResponse = employeeService.createEmployee(request);
 
@@ -227,7 +228,12 @@ class EmployeeServiceTest {
     void createEmployee_ShouldCreateNewEmployee_BadRequestEmptyName() {
 
         Employee newEmployee = new Employee(null, "", 555, 55, "title55", "email55");
-        CreateEmployeeRequest request = new CreateEmployeeRequest(newEmployee.getName(), newEmployee.getSalary(), newEmployee.getAge(), newEmployee.getTitle(), newEmployee.getEmail());
+        CreateEmployeeRequest request = new CreateEmployeeRequest(
+                newEmployee.getName(),
+                newEmployee.getSalary(),
+                newEmployee.getAge(),
+                newEmployee.getTitle(),
+                newEmployee.getEmail());
 
         ResponseEntity<Employee> employeesResponse = employeeService.createEmployee(request);
 
@@ -238,7 +244,12 @@ class EmployeeServiceTest {
     void createEmployee_ShouldCreateNewEmployee_BadRequestNegativeSalary() {
 
         Employee newEmployee = new Employee(null, "Name", -1, 55, "title55", "email55");
-        CreateEmployeeRequest request = new CreateEmployeeRequest(newEmployee.getName(), newEmployee.getSalary(), newEmployee.getAge(), newEmployee.getTitle(), newEmployee.getEmail());
+        CreateEmployeeRequest request = new CreateEmployeeRequest(
+                newEmployee.getName(),
+                newEmployee.getSalary(),
+                newEmployee.getAge(),
+                newEmployee.getTitle(),
+                newEmployee.getEmail());
 
         ResponseEntity<Employee> employeesResponse = employeeService.createEmployee(request);
 
@@ -249,7 +260,12 @@ class EmployeeServiceTest {
     void createEmployee_ShouldCreateNewEmployee_BadRequestAgeTooLow() {
 
         Employee newEmployee = new Employee(null, "Name", 100000, 12, "title55", "email55");
-        CreateEmployeeRequest request = new CreateEmployeeRequest(newEmployee.getName(), newEmployee.getSalary(), newEmployee.getAge(), newEmployee.getTitle(), newEmployee.getEmail());
+        CreateEmployeeRequest request = new CreateEmployeeRequest(
+                newEmployee.getName(),
+                newEmployee.getSalary(),
+                newEmployee.getAge(),
+                newEmployee.getTitle(),
+                newEmployee.getEmail());
 
         ResponseEntity<Employee> employeesResponse = employeeService.createEmployee(request);
 
@@ -260,7 +276,12 @@ class EmployeeServiceTest {
     void createEmployee_ShouldCreateNewEmployee_BadRequestAgeTooHigh() {
 
         Employee newEmployee = new Employee(null, "Name", 100000, 80, "title55", "email55");
-        CreateEmployeeRequest request = new CreateEmployeeRequest(newEmployee.getName(), newEmployee.getSalary(), newEmployee.getAge(), newEmployee.getTitle(), newEmployee.getEmail());
+        CreateEmployeeRequest request = new CreateEmployeeRequest(
+                newEmployee.getName(),
+                newEmployee.getSalary(),
+                newEmployee.getAge(),
+                newEmployee.getTitle(),
+                newEmployee.getEmail());
 
         ResponseEntity<Employee> employeesResponse = employeeService.createEmployee(request);
 
@@ -271,7 +292,12 @@ class EmployeeServiceTest {
     void createEmployee_ShouldCreateNewEmployee_BadRequestTitleEmpty() {
 
         Employee newEmployee = new Employee(null, "Name", 100000, 40, "", "email55");
-        CreateEmployeeRequest request = new CreateEmployeeRequest(newEmployee.getName(), newEmployee.getSalary(), newEmployee.getAge(), newEmployee.getTitle(), newEmployee.getEmail());
+        CreateEmployeeRequest request = new CreateEmployeeRequest(
+                newEmployee.getName(),
+                newEmployee.getSalary(),
+                newEmployee.getAge(),
+                newEmployee.getTitle(),
+                newEmployee.getEmail());
 
         ResponseEntity<Employee> employeesResponse = employeeService.createEmployee(request);
 
@@ -282,7 +308,12 @@ class EmployeeServiceTest {
     void createEmployee_ShouldCreateNewEmployee_InternalServerError() {
 
         Employee newEmployee = new Employee(null, "name21", 555, 55, "title55", "email55");
-        CreateEmployeeRequest request = new CreateEmployeeRequest(newEmployee.getName(), newEmployee.getSalary(), newEmployee.getAge(), newEmployee.getTitle(), newEmployee.getEmail());
+        CreateEmployeeRequest request = new CreateEmployeeRequest(
+                newEmployee.getName(),
+                newEmployee.getSalary(),
+                newEmployee.getAge(),
+                newEmployee.getTitle(),
+                newEmployee.getEmail());
 
         when(employeeWebClient.createEmployee(request)).thenThrow(new RuntimeException("Failed to create employee"));
 
@@ -296,12 +327,14 @@ class EmployeeServiceTest {
     void deleteEmployeeById_ShouldDeleteEmployeeById_Success() {
 
         String id = employees.get(9).getId().toString();
+        GetEmployeeResponse employeeResponse = new GetEmployeeResponse(employees.get(9), "status");
 
-        when(employeeWebClient.deleteEmployee(id))
-                .thenAnswer( iom -> {
-                   employees.removeIf(employee -> employee.getId().toString().equals(id));
-                   return new DeleteEmployeeResponse(true, "success");
-                });
+        when(employeeWebClient.getEmployeeById(id)).thenReturn(employeeResponse);
+
+        when(employeeWebClient.deleteEmployee(employees.get(9).getName())).thenAnswer(iom -> {
+            employees.removeIf(employee -> employee.getId().toString().equals(id));
+            return new DeleteEmployeeResponse(true, "success");
+        });
 
         ResponseEntity<String> response = employeeService.deleteEmployeeById(id);
         String body = response.getBody();
@@ -315,8 +348,10 @@ class EmployeeServiceTest {
     void deleteEmployeeById_ShouldDeleteEmployeeById_InternalServerError() {
 
         String id = employees.get(9).getId().toString();
+        GetEmployeeResponse employeeResponse = new GetEmployeeResponse(employees.get(9), "status");
 
-        when(employeeWebClient.deleteEmployee(id)).thenReturn(null);
+        when(employeeWebClient.getEmployeeById(id)).thenReturn(employeeResponse);
+        when(employeeWebClient.deleteEmployee(employees.get(9).getName())).thenReturn(null);
 
         ResponseEntity<String> response = employeeService.deleteEmployeeById(id);
         assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, response.getStatusCode());

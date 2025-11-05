@@ -7,13 +7,12 @@ import com.reliaquest.api.response.DeleteEmployeeResponse;
 import com.reliaquest.api.response.GetAllEmployeesResponse;
 import com.reliaquest.api.response.GetEmployeeResponse;
 import com.reliaquest.api.webclient.EmployeeWebClient;
+import java.util.Comparator;
+import java.util.List;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-
-import java.util.Comparator;
-import java.util.List;
 
 @Slf4j
 @Service
@@ -33,8 +32,8 @@ public class EmployeeService implements IEmployeeService<Employee, CreateEmploye
             GetAllEmployeesResponse allEmployeesResponse = employeeWebClient.getAllEmployees();
             return ResponseEntity.ok(allEmployeesResponse.getData());
         } catch (Exception e) {
-           log.error(e.getMessage());
-           return ResponseEntity.internalServerError().build();
+            log.error(e.getMessage());
+            return ResponseEntity.internalServerError().build();
         }
     }
 
@@ -72,10 +71,8 @@ public class EmployeeService implements IEmployeeService<Employee, CreateEmploye
 
         try {
             List<Employee> employees = employeeWebClient.getAllEmployees().getData();
-            int highestSalary = employees.stream()
-                    .mapToInt(Employee::getSalary)
-                    .max()
-                    .orElse(0);
+            int highestSalary =
+                    employees.stream().mapToInt(Employee::getSalary).max().orElse(0);
 
             return ResponseEntity.ok(highestSalary);
 
@@ -125,7 +122,8 @@ public class EmployeeService implements IEmployeeService<Employee, CreateEmploye
 
         try {
             GetEmployeeResponse employeeResponse = employeeWebClient.getEmployeeById(id);
-            DeleteEmployeeResponse allEmployeesResponse = employeeWebClient.deleteEmployee(employeeResponse.getData().getName());
+            DeleteEmployeeResponse allEmployeesResponse =
+                    employeeWebClient.deleteEmployee(employeeResponse.getData().getName());
 
             if (allEmployeesResponse.getData() == null || !allEmployeesResponse.getData()) {
                 log.error("Delete employee failed");
@@ -141,11 +139,10 @@ public class EmployeeService implements IEmployeeService<Employee, CreateEmploye
 
     private boolean validateInput(CreateEmployeeRequest employeeInput) {
 
-        if ((employeeInput.getName() == null || employeeInput.getName().isEmpty()) ||
-                (employeeInput.getSalary() < 0) ||
-                (employeeInput.getAge() < 16 || employeeInput.getAge() > 75) ||
-                (employeeInput.getTitle() == null || employeeInput.getTitle().isEmpty())
-        ) {
+        if ((employeeInput.getName() == null || employeeInput.getName().isEmpty())
+                || (employeeInput.getSalary() < 0)
+                || (employeeInput.getAge() < 16 || employeeInput.getAge() > 75)
+                || (employeeInput.getTitle() == null || employeeInput.getTitle().isEmpty())) {
             return false;
         } else {
             return true;

@@ -3,11 +3,10 @@ package com.reliaquest.api.controller;
 import com.reliaquest.api.model.Employee;
 import com.reliaquest.api.request.CreateEmployeeRequest;
 import com.reliaquest.api.service.IEmployeeService;
+import java.util.List;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-
-import java.util.List;
 
 @Slf4j
 @Controller
